@@ -1,0 +1,88 @@
+<!-- templates/insights.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}Daily Insights{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Daily Insights</h1>
+    <div class="form-container">
+        <form method="get">
+            <label for="id_date_start">Start Date:</label>
+            <input type="date" id="id_date_start" name="date_start" value="{{ form.date_start.value|default_if_none:'' }}">
+            <label for="id_date_stop">End Date:</label>
+            <input type="date" id="id_date_stop" name="date_stop" value="{{ form.date_stop.value|default_if_none:'' }}">
+            <button type="submit">Filter</button>
+        </form>
+    </div>
+
+    <div class="column">
+        <h2>Valor investido</h2>
+        <p>R${{ aggregates.total_spend }}</p>
+    </div>
+
+    <div class="column">
+        <h2>Conversões</h2>
+        <p>{{ aggregates.total_purchases }}</p>
+    </div>
+
+    <div class="column">
+        <h2>Custo por Conversão</h2>
+        <p>R${{ aggregates.cost_per_purchase|floatformat:2 }}</p>
+    </div>
+
+    <div class="column">
+        <h2>Retorno</h2>
+        <p>{{ aggregates.total_reach }}</p>
+    </div>
+
+    <h2>Details</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Campaign ID</th>
+                <th>Campaign Name</th>
+                <th>Ad Set Name</th>
+                <th>Day</th>
+                <th>Spend</th>
+                <th>Reach</th>
+                <th>Impressions</th>
+                <th>Frequency</th>
+                <th>CPM</th>
+                <th>Link Clicks</th>
+                <th>Total Messaging Connection</th>
+                <th>Purchases</th>
+                <th>Purchases Conversion Value</th>
+                <th>Video Watches 25%</th>
+                <th>Video Watches 50%</th>
+                <th>Video Watches 75%</th>
+                <th>Video Watches 95%</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for insight in insights %}
+                <tr>
+                    <td>{{ insight.adset.campaign.campaign_id }}</td>
+                    <td>{{ insight.adset.campaign.campaign_name }}</td>
+                    <td>{{ insight.adset.adset_name }}</td>
+                    <td>{{ insight.day }}</td>
+                    <td>{{ insight.spend }}</td>
+                    <td>{{ insight.reach }}</td>
+                    <td>{{ insight.impressions }}</td>
+                    <td>{{ insight.frequency }}</td>
+                    <td>{{ insight.cpm }}</td>
+                    <td>{{ insight.link_clicks }}</td>
+                    <td>{{ insight.total_messaging_connection }}</td>
+                    <td>{{ insight.purchases }}</td>
+                    <td>{{ insight.purchases_conversion_value }}</td>
+                    <td>{{ insight.video_watches_25 }}</td>
+                    <td>{{ insight.video_watches_50 }}</td>
+                    <td>{{ insight.video_watches_75 }}</td>
+                    <td>{{ insight.video_watches_95 }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

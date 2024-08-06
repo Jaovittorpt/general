@@ -1,0 +1,15 @@
+{% extends 'base_cliente.html' %}
+
+{% block title %}{{ cliente.nome }} - Dashboard{% endblock %}
+
+{% block content %}
+    <h1>{{ cliente.nome }}</h1>
+    <p>Email: {{ cliente.email }}</p>
+    <p>Nome da Empresa: {{ cliente.nome_da_empresa }}</p>
+    <p>CNPJ: {{ cliente.cnpj }}</p>
+    <p>Faturamento: {{ cliente.faturamento }}</p>
+    <p>Valor do Contrato: {{ cliente.valor_do_contrato }}</p>
+    <p>Tempo de Contrato: {{ cliente.tempo_de_contrato }} meses</p>
+    <p>Bem-vindo ao dashboard de {{ cliente.nome }}.</p>
+    <!-- Aqui você pode adicionar gráficos e outros indicadores -->
+{% endblock %}

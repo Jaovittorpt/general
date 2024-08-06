@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Clientes{% endblock %}
+
+{% block content %}
+    <h1>Adicionar Cliente</h1>
+    <button id="adicionarClienteBtn">Adicionar Cliente</button>
+    
+    <div id="adicionarClienteModal" style="display:none;">
+        <form id="clienteForm" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Salvar</button>
+        </form>
+    </div>
+
+    <h2>Lista de Clientes</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Nome da Empresa</th>
+                <th>CNPJ</th>
+                <th>Faturamento</th>
+                <th>Valor do Contrato</th>
+                <th>Tempo de Contrato</th>
+            </tr>
+        </thead>
+        <tbody id="clientesTableBody">
+            {% for cliente in clientes %}
+            <tr>
+                <td><a href="{% url 'detalhes-cliente' cliente.id %}">{{ cliente.nome }}</a></td>
+                <td>{{ cliente.email }}</td>
+                <td>{{ cliente.nome_da_empresa }}</td>
+                <td>{{ cliente.cnpj }}</td>
+                <td>{{ cliente.faturamento }}</td>
+                <td>{{ cliente.valor_do_contrato }}</td>
+                <td>{{ cliente.tempo_de_contrato }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        document.getElementById('adicionarClienteBtn').onclick = function() {
+            document.getElementById('adicionarClienteModal').style.display = 'block';
+        };
+
+        document.getElementById('clienteForm').onsubmit = function(event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+
+            fetch("{% url 'adicionar-cliente' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    var tableBody = document.getElementById('clientesTableBody');
+                    var newRow = document.createElement('tr');
+                    newRow.innerHTML = `
+                        <td><a href="/clientes/${data.client.id}/">${data.client.nome}</a></td>
+                        <td>${data.client.email}</td>
+                        <td>${data.client.nome_da_empresa}</td>
+                        <td>${data.client.cnpj}</td>
+                        <td>${data.client.faturamento}</td>
+                        <td>${data.client.valor_do_contrato}</td>
+                        <td>${data.client.tempo_de_contrato}</td>
+                    `;
+                    tableBody.appendChild(newRow);
+                    document.getElementById('adicionarClienteModal').style.display = 'none';
+                    document.getElementById('clienteForm').reset();
+                } else {
+                    alert('Erro ao adicionar cliente.');
+                }
+            });
+        };
+    </script>
+{% endblock %}
